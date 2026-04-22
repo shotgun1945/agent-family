@@ -1,0 +1,6 @@
+---
+description: Project-wide context - always apply
+alwaysApply: true
+---
+
+Follow `CLAUDE.md` as the single source of truth. Read it before starting any task.

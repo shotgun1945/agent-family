@@ -1,0 +1,24 @@
+---
+updated: 2026-04-21
+---
+
+# docs/
+
+프로젝트 문서 폴더. 워크플로우 순서에 따라 번호로 정렬된다.
+
+## 폴더 구조
+
+| 폴더 | 용도 |
+|------|------|
+| `00_backlog/` | 백로그 — 작업 대기/진행/완료 관리 |
+| `10_planning/` | 기획서, 요구사항 — [onboarding-prompt-draft.md](10_planning/onboarding-prompt-draft.md) |
+| `20_spec/` | 스펙, 아키텍처, 설계 문서 — [family-core-template-spec.md](20_spec/family-core-template-spec.md) · [github-template-file-list.md](20_spec/github-template-file-list.md) |
+| `50_review/` | 리뷰 기록, 결정 사항 |
+| `90_logs/` | 운영 로그, 릴리즈 노트 |
+
+## 네이밍 규칙
+
+- 폴더 앞에 두 자리 숫자를 붙인다 — 워크플로우 순서와 정렬을 일치시키기 위함
+- 번호 사이 여백(30~40, 60~80)은 의도적으로 비워둔다 — 나중에 폴더 추가 시 사이에 끼워넣을 수 있도록
+- 새 폴더를 추가할 때 이 README에 반드시 등록한다
+
