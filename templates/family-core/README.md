@@ -37,21 +37,24 @@ cd {username}
 claude
 ```
 
-### 4. 온보딩 프롬프트 실행
+### 4. Run the onboarding prompt
 
-Claude Code에 아래 프롬프트를 입력하세요:
+Open Claude Code and paste:
 
 ```
-agent-family-core 초기 설정 진행해줘.
+Set up my agent-family-core.
 
-아래 값들로 플레이스홀더를 치환하고, 
-페르소나 파일 작성을 위해 나에게 질문해줘.
+Replace the placeholders with the values below,
+then ask me questions to fill in the persona files.
 
-- username: [내 이름]
-- AI 이름: [에이전트 이름]
-- 백로그 접두어: [2~3자리 영문 대문자, 예: MY]
-- 프로젝트 목적: [한 줄 설명]
+- username: [your name]
+- AI name: [agent name]
+- Backlog prefix: [2–3 uppercase letters, e.g. MY]
+- Project purpose: [one-line description]
+- Language: [your preferred language, e.g. English / 한국어 / 日本語]
 ```
+
+> **Language is required.** The agent uses this as its default language for all responses and documents.
 
 ---
 
