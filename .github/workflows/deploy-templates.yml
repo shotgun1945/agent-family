@@ -1,0 +1,49 @@
+name: Deploy Templates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'templates/family-core/**'
+      - 'templates/family-plugin/**'
+
+jobs:
+  deploy-family-core:
+    if: contains(toJson(github.event.commits), 'templates/family-core')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push to agent-family-core
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/${OWNER}/agent-family-core.git /tmp/family-core
+          rsync -av --delete --exclude='.git' templates/family-core/ /tmp/family-core/
+          cd /tmp/family-core
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet && echo "No changes" || git commit -m "sync: update from agent-family"
+          git push
+
+  deploy-family-plugin:
+    if: contains(toJson(github.event.commits), 'templates/family-plugin')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push to agent-family-plugin
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/${OWNER}/agent-family-plugin.git /tmp/family-plugin
+          rsync -av --delete --exclude='.git' templates/family-plugin/ /tmp/family-plugin/
+          cd /tmp/family-plugin
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet && echo "No changes" || git commit -m "sync: update from agent-family"
+          git push
