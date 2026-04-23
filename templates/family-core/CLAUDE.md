@@ -26,9 +26,18 @@ updated: {SETUP_DATE}
 - 저장 기준: `data/persona/update_rules.md`
 - 조건에 맞는 정보는 `data/persona/`에 직접 반영
 
+## 자식 관리
+- **전파 목록(매니페스트)** — 자식에 복사되지 않음. 항상 이 파일만 참조: `data/children_manifest.md`
+- **자식 레지스트리** — 등록된 자식 프로젝트 목록: `data/children_registry.md`
+- 자식 경로: `../{username}_children/`
+
 ## 스킬
 - `lets-commit` → `.claude/skills/lets-commit/SKILL.md`
 - `complete-backlog-item` → `.claude/skills/complete-backlog-item/SKILL.md`
+- `create-child` → `.claude/skills/create-child/SKILL.md`
+- `promote-to-plugin` → `.claude/skills/promote-to-plugin/SKILL.md`
+- `sync-to-children` → `.claude/skills/sync-to-children/SKILL.md`
+- `sync-to-core` → `.claude/skills/sync-to-core/SKILL.md`
 
 ## 백로그
 - 활성 백로그: `docs/00_backlog/backlog.md` — **진행** / **대기** 섹션
