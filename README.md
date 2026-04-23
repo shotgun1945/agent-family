@@ -56,20 +56,35 @@ Set up my agent-family system.
 
 Do the following steps in order:
 
-1. Ask me for a family name (this becomes the folder and repo name).
-2. Create the folder structure:
+1. Ask me for my preferred language first (e.g. English / 한국어 / 日本語). Use that language for all questions and output from this point on.
+2. Ask me for a family name (this becomes the folder and repo name).
+3. Create the folder structure:
    - {family-name}_family/
    - {family-name}_family/{family-name}/        ← Family Core lives here
    - {family-name}_family/{family-name}_children/
-3. Clone the Family Core template into {family-name}_family/{family-name}/:
+4. Clone the Family Core template into {family-name}_family/{family-name}/:
    git clone https://github.com/shotgun1945/agent-family-core.git {family-name}_family/{family-name}
-4. Ask me the following values one by one, then replace all placeholders:
+5. Ask me the following values one by one:
    - AI name
    - Backlog prefix (2–3 uppercase letters, e.g. MY)
-   - Language (e.g. English / 한국어 / 日本語)
-5. Fill in the persona files interactively.
-6. Fetch the plugin registry and ask which plugins I want to install:
+6. Replace all placeholders in the cloned files. Use today's date for {SETUP_DATE} (YYYY-MM-DD format).
+   Files to update:
+   - README.md → {family-name}
+   - CLAUDE.md → {SETUP_DATE}, {username}, {LANGUAGE}, {AI_NAME}, {BACKLOG_PREFIX}
+   - data/persona/assistant_persona.md → {SETUP_DATE}, {AI_NAME}, {username}
+   - data/persona/profile.md → {SETUP_DATE}
+   - data/persona/preferences.md → {SETUP_DATE}
+   - data/persona/personality.md → {SETUP_DATE}
+   - data/persona/update_rules.md → {SETUP_DATE}
+   - data/children_manifest.md → {SETUP_DATE}, {username}
+   - data/children_registry.md → {SETUP_DATE}, {username}
+   - docs/README.md → {SETUP_DATE}
+   - docs/00_backlog/backlog.md → {SETUP_DATE}, {BACKLOG_PREFIX}
+   - docs/00_backlog/backlog_done.md → {SETUP_DATE}
+   Note: {username} and {family-name} = family name entered in step 2.
+7. Fetch the plugin registry and ask which plugins I want to install:
    https://raw.githubusercontent.com/shotgun1945/agent-family/main/plugins/registry.md
+8. When done, tell me to open {family-name}_family/{family-name}/ in my AI agent and start fresh from there.
 ```
 
 ---
@@ -101,13 +116,30 @@ claude   # or open in Cursor / your preferred agent
 ```
 Set up my Family Core.
 
-Ask me the following values one by one, then replace all placeholders and fill in the persona files interactively.
+Ask me the following values one by one (starting with language), then replace all placeholders. Use today's date for {SETUP_DATE} (YYYY-MM-DD).
 
 Required:
-- Family name
+- Language (e.g. English / 한국어 / 日本語) — ask this first, then use it for all output
+- Family name (this becomes {username} in all files)
 - AI name
 - Backlog prefix (2–3 uppercase letters, e.g. MY)
-- Language (e.g. English / 한국어 / 日本語)
+
+Files to update after collecting values:
+- README.md → {family-name}
+- CLAUDE.md → {SETUP_DATE}, {username}, {LANGUAGE}, {AI_NAME}, {BACKLOG_PREFIX}
+- data/persona/assistant_persona.md → {SETUP_DATE}, {AI_NAME}, {username}
+- data/persona/profile.md → {SETUP_DATE}
+- data/persona/preferences.md → {SETUP_DATE}
+- data/persona/personality.md → {SETUP_DATE}
+- data/persona/update_rules.md → {SETUP_DATE}
+- data/children_manifest.md → {SETUP_DATE}, {username}
+- data/children_registry.md → {SETUP_DATE}, {username}
+- docs/README.md → {SETUP_DATE}
+- docs/00_backlog/backlog.md → {SETUP_DATE}, {BACKLOG_PREFIX}
+- docs/00_backlog/backlog_done.md → {SETUP_DATE}
+Note: {username} and {family-name} = family name entered above.
+
+After setup, optionally ask if I want to set up my persona (profile, preferences, personality).
 ```
 
 ---
