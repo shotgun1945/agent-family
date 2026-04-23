@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - 'templates/family-core/**'
-      - 'templates/family-plugin/**'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -36,37 +35,6 @@ jobs:
           git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/${OWNER}/agent-family-core.git /tmp/family-core
           rsync -av --delete --exclude='.git' templates/family-core/ /tmp/family-core/
           cd /tmp/family-core
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          git add -A
-          git diff --staged --quiet && echo "No changes" || git commit -m "sync: update from agent-family"
-          git push
-
-  deploy-family-plugin:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Check for family-plugin changes
-        id: check
-        run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^templates/family-plugin/'; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Push to agent-family-plugin
-        if: steps.check.outputs.changed == 'true'
-        env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
-          OWNER: ${{ github.repository_owner }}
-        run: |
-          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/${OWNER}/agent-family-plugin.git /tmp/family-plugin
-          rsync -av --delete --exclude='.git' templates/family-plugin/ /tmp/family-plugin/
-          cd /tmp/family-plugin
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git add -A

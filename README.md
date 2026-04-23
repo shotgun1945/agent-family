@@ -13,8 +13,6 @@ The system has two layers:
 - **Family Core** — the parent. Defines the agent's identity, memory, skills, and rules. Manages and propagates everything to children.
 - **Children** — independent child projects that connect to the parent. Each has its own purpose and backlog, but inherits skills and rules from the parent.
 
-No code in the parent. No database. Files are memory.
-
 ---
 
 ## Parent–Child Structure
@@ -28,8 +26,8 @@ No code in the parent. No database. Files are memory.
 │       ├── skills/                # Skills managed here, propagated to children
 │       └── templates/             # Templates used to create child projects
 └── {username}_children/
-    ├── financial-planner/         # Child project
-    └── telegram-bot/              # Child project
+    ├── financial-planner/         # Child project (personal)
+    └── telegram-bot/              # Plugin (installed from registry)
 ```
 
 Family Core is the single source of truth for skills and rules.  
@@ -39,86 +37,65 @@ Children start from the parent's template and stay in sync through propagation s
 
 ## Child vs Plugin
 
-A **child** is a personal project created from within Family Core using the `create-child` skill. Freely added and removed by the user.
+A **child** is a personal project created locally from within Family Core using the `create-child` skill.
 
-A **plugin** is a child that has been promoted for public distribution — managed and deployed through agent-family. Plugins can start as children and be promoted via the `promote-to-plugin` skill, or be built as plugins from the start.
+A **plugin** is an official project installed from the [plugin registry](plugins/registry.md) via the `install-plugin` skill. Plugins are independent Git repositories maintained by the community.
 
 All plugins are children, but not all children are plugins.
 
 ---
 
-## How Children Are Created
+## Quick Start
 
-Children are created directly from the parent using the `create-child` skill — no manual setup needed.
-
-The parent holds the templates used to scaffold each new child (under `.claude/templates/`).  
-Modifying these lets you customize the default structure of all future children.
-
-When creating a child, the agent asks whether you intend to distribute it publicly.  
-If yes, it scaffolds a plugin-ready structure from the start.
+Open [agent-family-core](https://github.com/shotgun1945/agent-family-core) in your AI agent (Claude Code, Cursor, etc.) and paste this prompt:
 
 ```
-# In Family Core, just ask:
-Create a new child project.
+Set up my agent-family system.
+
+Ask me each of the following values one by one, then set up the Family Core.
+After core setup, fetch the plugin registry from:
+https://raw.githubusercontent.com/shotgun1945/agent-family/main/plugins/registry.md
+List available plugins and ask which ones I want to install.
+
+Required (core):
+- username
+- AI name
+- Backlog prefix (2–3 uppercase letters, e.g. MY)
+- Language (default language for all responses and documents, e.g. English / 한국어 / 日本語)
 ```
 
 ---
 
-## Propagation
+## Skills
 
-Skills and rules flow between parent and children through two built-in skills.
-
-| Skill | Direction | When to use |
-|-------|-----------|-------------|
-| `create-child` | Parent → new child | Create a new child project |
-| `promote-to-plugin` | Child → agent-family | Promote a child to a distributable plugin |
+| Skill | Direction | Purpose |
+|-------|-----------|---------|
+| `create-child` | Parent → new child | Scaffold a new personal child project |
+| `install-plugin` | Registry → children | Install an official plugin from the registry |
+| `promote-to-plugin` | Child → community | Promote a child to a distributable plugin |
 | `sync-to-children` | Parent → children | Push updated skills or rules to children |
 | `sync-to-core` | Child → Parent | Promote a child-level change back to the parent |
 
 ---
 
-## Templates
+## Plugin Registry
 
-| Template | Description |
-|----------|-------------|
-| [family-core](templates/family-core/) | Family Core — the parent project |
-| [family-plugin](templates/family-plugin/) | Plugin — distributable child project |
+Available plugins are listed in [plugins/registry.md](plugins/registry.md).
+
+To install a plugin, ask the agent:
+```
+Install a plugin.
+```
 
 ---
 
-## Quick Start
+## For Plugin Developers
 
-### 1. Create the Family Core
+Want to build a plugin for the agent-family ecosystem?
 
-Use the [family-core](templates/family-core/) template.  
-Name the repo `{username}` (e.g. `alice`).
-
-### 2. Run the onboarding prompt
-
-Open Claude Code in the repo and paste:
-
-```
-Set up my agent-family-core.
-
-Ask me each of the following values one by one, then replace all placeholders and fill in the persona files interactively.
-
-Required:
-- username
-- AI name
-- Backlog prefix (2–3 uppercase letters, e.g. MY)
-- Project purpose (one-line description)
-- Language (default language for all responses and documents, e.g. English / 한국어 / 日本語)
-```
-
-> **Language is required.** The agent uses this as its default language for all responses and documents.
-
-### 3. Create children from the parent
-
-Once Family Core is set up, ask the agent to create child projects:
-
-```
-Create a new child project.
-```
+1. Use `.claude/templates/plugin/` inside `agent-family-core` as your starting point
+2. Build your plugin as a public GitHub repo
+3. Submit a PR to [plugins/registry.md](plugins/registry.md) to register it
 
 ---
 
@@ -126,7 +103,6 @@ Create a new child project.
 
 | Principle | How |
 |-----------|-----|
-| Zero code in parent | Family Core is `.md` only. Code lives in children. |
 | Files = memory | Markdown files are the agent's persistent state. No DB. |
 | Skills = behavior | One `SKILL.md` = one reusable workflow. |
 | Parent manages, children execute | Skills and rules flow down from parent to children. |
@@ -136,21 +112,14 @@ Create a new child project.
 
 ## Auto-deployment
 
-This repo uses GitHub Actions to automatically sync template folders to their respective GitHub Template repositories on every push to `main`.
-
-```
-push to agent-family (main)
-  ├── templates/family-core/**   →  agent-family-core repo
-  └── templates/family-plugin/** →  agent-family-plugin repo
-```
+This repo uses GitHub Actions to automatically sync `templates/family-core/` to [agent-family-core](https://github.com/shotgun1945/agent-family-core) on every push to `main`.
 
 ### Setup
 
-**1. Create two GitHub repos** (empty, no README)
+**1. Create a GitHub repo** (empty, no README)
 - `agent-family-core`
-- `agent-family-plugin`
 
-Enable **Template repository** in each repo's Settings → General.
+Enable **Template repository** in the repo's Settings → General.
 
 **2. Generate a Fine-grained PAT**
 
@@ -158,7 +127,7 @@ GitHub → Settings → Developer settings → Personal access tokens → Fine-g
 
 | Field | Value |
 |-------|-------|
-| Repository access | `agent-family-core`, `agent-family-plugin` |
+| Repository access | `agent-family-core` |
 | Contents permission | Read and write |
 
 **3. Add secret to this repo**
@@ -168,7 +137,7 @@ GitHub → Settings → Developer settings → Personal access tokens → Fine-g
 - Name: `DEPLOY_TOKEN`
 - Value: the PAT from step 2
 
-After this, any push that modifies `templates/` will automatically update the template repos.
+After this, any push that modifies `templates/family-core/` will automatically update the template repo.
 
 ---
 
@@ -177,10 +146,11 @@ After this, any push that modifies `templates/` will automatically update the te
 ```
 agent-family/
 ├── .github/workflows/
-│   └── deploy-templates.yml     # Auto-deployment to template repos
+│   └── deploy-templates.yml     # Auto-deployment to agent-family-core
 ├── templates/
-│   ├── family-core/             # Source for agent-family-core repo
-│   └── family-plugin/           # Source for agent-family-plugin repo
+│   └── family-core/             # Source for agent-family-core repo
+├── plugins/
+│   └── registry.md              # Official plugin list
 └── docs/
     ├── 10_planning/             # Onboarding prompt design
     └── 20_spec/                 # Architecture specs
