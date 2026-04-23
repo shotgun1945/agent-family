@@ -7,14 +7,28 @@ on:
       - 'templates/family-core/**'
       - 'templates/family-plugin/**'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy-family-core:
-    if: contains(toJson(github.event.commits), 'templates/family-core')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for family-core changes
+        id: check
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^templates/family-core/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Push to agent-family-core
+        if: steps.check.outputs.changed == 'true'
         env:
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
           OWNER: ${{ github.repository_owner }}
@@ -29,12 +43,23 @@ jobs:
           git push
 
   deploy-family-plugin:
-    if: contains(toJson(github.event.commits), 'templates/family-plugin')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for family-plugin changes
+        id: check
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^templates/family-plugin/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Push to agent-family-plugin
+        if: steps.check.outputs.changed == 'true'
         env:
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
           OWNER: ${{ github.repository_owner }}
