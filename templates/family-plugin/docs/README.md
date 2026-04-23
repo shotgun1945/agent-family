@@ -13,4 +13,4 @@ updated: {SETUP_DATE}
 | `00_backlog/` | 백로그 — 작업 대기/진행/완료 관리 |
 | `10_planning/` | 기획서, 요구사항 |
 | `20_spec/` | 스펙, 설계 문서 |
-| `90_logs/` | 운영 로그, 릴리즈 노트 |
+| `90_logs/` | 릴리즈 노트, CHANGELOG |

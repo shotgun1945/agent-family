@@ -1,79 +1,98 @@
 # agent-family-plugin
 
-> AI 패밀리 시스템의 **자식 플러그인** 템플릿입니다.
+> A **plugin** for the agent-family system — a distributable child project.
 
 [![Use this template](https://img.shields.io/badge/Use%20this%20template-2ea44f?style=for-the-badge)](../../generate)
 
 ---
 
-## 이게 뭔가요?
+## What is this?
 
-본체([agent-family-core](../agent-family-core))에 기능을 추가하는 플러그인 프로젝트입니다.
+A plugin is a child project designed to be distributed publicly — built to extend Family Core for anyone in the agent-family ecosystem.
 
-| 플러그인 타입 | 역할 | 예시 |
-|--------------|------|------|
-| Core Plugin | 본체 기능 확장 | financial-planner, journal |
-| Connector Plugin | 외부 서비스 연동 | telegram-bot, notion-sync |
-| Distribution Plugin | 배포·공개 관리 | agent-family (이 템플릿의 출처) |
+**Child vs Plugin:**
+- A **child** is a personal project created from within Family Core, used privately.
+- A **plugin** is a child that has been promoted for public distribution, managed through agent-family.
+
+Plugins can start as children and be promoted via the `promote-to-plugin` skill, or be built as plugins from the start.
 
 ---
 
-## 빠른 시작
+## Quick Start
 
-### 1. 템플릿 복제
+### 1. Create your repo
 
-**"Use this template"** 클릭 → 레포 이름은 플러그인 역할로 (예: `financial-planner`, `telegram-bot`).
+Click **"Use this template"** → name it after the plugin's role (e.g. `tele-agent`, `notion-sync`).
 
-### 2. 로컬 배치
+### 2. Place it next to your core
 
-본체와 형제 관계로 배치하는 것을 권장:
-
-```bash
+```
 {username}_family/
-├── {username}/                # 본체 (agent-family-core)
+├── {username}/                    # Family Core (parent)
 └── {username}_children/
-    └── {plugin-name}/         # 이 레포
+    └── {plugin-name}/             # This repo (plugin)
 ```
 
-### 3. Claude Code 열기
+### 3. Open Claude Code
 
 ```bash
 cd {username}_children/{plugin-name}
 claude
 ```
 
-### 4. 온보딩 프롬프트 실행
+### 4. Paste the onboarding prompt
 
 ```
-agent-family-plugin 초기 설정 진행해줘.
+Set up my agent-family-plugin.
 
-- 플러그인 이름: [plugin-name]
-- 플러그인 타입: Core | Connector | Distribution
-- 백로그 접두어: [2~3자리 영문 대문자, 예: FP]
-- 목적: [한 줄 설명]
-- 본체 경로: ../../{username}
+Ask me each of the following values one by one, then replace all placeholders and initialize the project.
+
+Required:
+- Plugin name
+- Backlog prefix (2–3 uppercase letters, e.g. TA)
+- Purpose (one-line description)
+- Core path (relative path to the Family Core repo, e.g. ../../{username})
 ```
 
 ---
 
-## 폴더 구조
+## Folder Structure
 
 ```
 {plugin-name}/
-├── CLAUDE.md                  # 플러그인 거버넌스
+├── CLAUDE.md                      # Plugin governance
 ├── .claude/
 │   ├── settings.json
 │   └── skills/
 │       └── lets-commit/SKILL.md
-└── docs/
-    ├── README.md
-    └── 00_backlog/
-        ├── backlog.md
-        └── backlog_done.md
+├── docs/
+│   ├── README.md
+│   ├── 00_backlog/
+│   │   ├── backlog.md
+│   │   └── backlog_done.md
+│   └── 90_logs/
+│       └── CHANGELOG.md           # Release notes
+└── README.md                      # Public-facing usage guide
 ```
 
 ---
 
-## 라이선스
+## Staying in Sync with the Parent
+
+| Direction | Skill | When to use |
+|-----------|-------|-------------|
+| Parent → Plugin | `sync-to-children` | After updating skills or rules in the parent |
+| Plugin → Parent | `sync-to-core` | When a plugin-level change should be promoted to the parent |
+
+---
+
+## Distribution
+
+This plugin is managed through [agent-family](https://github.com/{owner}/agent-family).  
+To register or update this plugin, open a PR to `plugins/registry.md` in the agent-family repo.
+
+---
+
+## License
 
 MIT

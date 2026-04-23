@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-21
+updated: 2026-04-22
 status: draft
 ---
 
@@ -9,10 +9,10 @@ status: draft
 
 `{username}_family/`는 두 폴더로 구성된다.
 
-- `{username}/` — **본체(Family Core)**: 에이전트의 신원·기억·행동을 정의하는 마크다운 전용 프로젝트
-- `{username}_children/` — **자식 플러그인**: 도메인별 기능 확장 프로젝트 집합
+- `{username}/` — **부모(Family Core)**: 에이전트의 신원·기억·행동을 정의하는 마크다운 전용 프로젝트
+- `{username}_children/` — **자식**: 도메인별 기능 확장 프로젝트 집합
 
-이 문서는 본체(`{username}/`)의 템플릿 구조를 정의한다.
+이 문서는 부모(`{username}/`)의 템플릿 구조를 정의한다.
 
 ---
 
@@ -24,9 +24,14 @@ status: draft
 ├── .claude/
 │   ├── settings.json                  # [필수] Claude Code 설정 (훅, 권한)
 │   ├── MEMORY.md                      # [필수] 에이전트 메모리 인덱스
-│   └── skills/                        # [필수] 스킬 모듈
-│       ├── lets-commit/SKILL.md
-│       └── complete-backlog-item/SKILL.md
+│   ├── skills/                        # [필수] 스킬 모듈
+│   │   ├── lets-commit/SKILL.md
+│   │   ├── complete-backlog-item/SKILL.md
+│   │   ├── create-child/SKILL.md      # 자식 프로젝트 생성
+│   │   ├── sync-to-children/SKILL.md  # 부모→자식 전파
+│   │   └── sync-to-core/SKILL.md     # 자식→부모 역전파
+│   └── templates/
+│       └── family-child/              # create-child 스킬이 사용하는 자식 템플릿
 ├── data/
 │   └── persona/
 │       ├── profile.md                 # [필수] 유저 프로필
@@ -54,6 +59,7 @@ status: draft
 에이전트의 **헌법**. Claude Code / Cursor가 프로젝트를 열 때 가장 먼저 로드.
 
 포함 섹션:
+- 언어 설정 (`{LANGUAGE}`)
 - 프로젝트 목적 · 에이전트 정체성
 - 페르소나 파일 경로 (`data/persona/` 참조)
 - 백로그 관리 규칙 (ID 접두어, 필드 정의)
@@ -93,18 +99,21 @@ Claude Code 실행 환경 설정. 최소 구성:
 
 **기본 포함:**
 
-| 스킬 | 역할 |
-|------|------|
-| `lets-commit` | 커밋 메시지 컨벤션 및 스테이징 |
-| `complete-backlog-item` | 백로그 항목 완료 처리 + 아카이브 이동 |
+| 스킬 | 방향 | 역할 |
+|------|------|------|
+| `lets-commit` | — | 커밋 메시지 컨벤션 및 스테이징 |
+| `complete-backlog-item` | — | 백로그 항목 완료 처리 + 아카이브 이동 |
+| `create-child` | Parent → new child | 자식 프로젝트 생성 |
+| `sync-to-children` | Parent → children | 스킬·규칙을 자식으로 전파 |
+| `sync-to-core` | Child → Parent | 자식 변경을 부모로 역전파 |
 
-**선택 (자식 프로젝트 구성 후 추가):**
+---
 
-| 스킬 | 역할 |
-|------|------|
-| `sync-children-distribution` | 스킬/문서를 자식으로 전파 |
-| `wiki-ingest` | 외부 소스를 지식 베이스에 수집 |
-| `wiki-query` | 지식 베이스 검색 |
+### `.claude/templates/family-child/` [필수]
+
+`create-child` 스킬이 자식 프로젝트를 생성할 때 사용하는 템플릿 파일 모음.
+
+이 폴더의 파일을 수정하면 앞으로 생성되는 모든 자식의 기본 구조가 바뀜.
 
 ---
 
@@ -136,14 +145,14 @@ Claude Code 실행 환경 설정. 최소 구성:
 
 ---
 
-## 자식 플러그인 구조
+## 자식 구조
 
 ```
-{username}_children/{plugin-name}/
-├── CLAUDE.md                          # [필수] 플러그인 거버넌스
+{username}_children/{child-name}/
+├── CLAUDE.md                          # [필수] 자식 거버넌스
 ├── .claude/
 │   ├── settings.json                  # [필수] Claude Code 설정
-│   └── skills/                        # [선택] 본체에서 로컬 복사된 스킬
+│   └── skills/                        # 부모에서 전파받은 스킬
 │       └── lets-commit/SKILL.md
 └── docs/
     ├── README.md
@@ -153,8 +162,8 @@ Claude Code 실행 환경 설정. 최소 구성:
 ```
 
 자식 `CLAUDE.md` 필수 참조:
-- 본체 페르소나 경로: `../../{username}/data/persona/`
-- 플러그인 타입 명시: Core / Connector / Distribution
+- 부모 페르소나 경로: `../../{username}/data/persona/`
+- 부모 CLAUDE.md: `../../{username}/CLAUDE.md`
 
 ---
 
@@ -162,8 +171,8 @@ Claude Code 실행 환경 설정. 최소 구성:
 
 | 원칙 | 적용 방식 |
 |------|-----------|
-| 코드 제로 | 본체는 `.md`만. 실행 코드는 자식에만 존재 |
+| 코드 제로 | 부모는 `.md`만. 실행 코드는 자식에만 존재 |
 | 파일 = 메모리 | DB 없이 마크다운이 에이전트 상태 저장 |
 | 스킬 = 행동 단위 | `SKILL.md` 하나 = 재사용 가능한 워크플로 하나 |
-| 플러그인 탈부착 | 자식 추가/제거가 본체에 영향 없음 |
+| 자식 탈부착 | 자식 추가/제거가 부모에 영향 없음 |
 | 단일 진실 원천 | `CLAUDE.md`가 유일한 거버넌스 문서 |

@@ -7,9 +7,6 @@ updated: {SETUP_DATE}
 ## 프로젝트 목적
 {PROJECT_PURPOSE}
 
-## 플러그인 타입
-{PLUGIN_TYPE}  <!-- Core | Connector | Distribution -->
-
 ## 본체 연동
 - 유저 페르소나: `../../{username}/data/persona/`
 - 본체 CLAUDE.md: `../../{username}/CLAUDE.md`
@@ -33,3 +30,7 @@ updated: {SETUP_DATE}
 
 ## 커밋 규칙
 `.claude/skills/lets-commit/SKILL.md` 준수
+
+## 배포 관리
+- 변경 사항은 `docs/90_logs/CHANGELOG.md`에 기록
+- 배포 준비 완료 시 agent-family `plugins/registry.md` 업데이트

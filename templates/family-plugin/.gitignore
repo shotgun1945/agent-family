@@ -9,7 +9,7 @@
 # 환경변수
 .env
 
-# 의존성 (코드 프로젝트인 경우)
+# 의존성
 node_modules/
 __pycache__/
 dist/

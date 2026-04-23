@@ -1,43 +1,88 @@
 # agent-family
 
-> Build your own AI family system — a personal AI with identity, memory, and extensible plugins.
+> Build your own AI family system — a personal AI with identity, memory, and extensible children.
 
 ---
 
 ## What is this?
 
-**agent-family** is an open template framework for building a *family-structured AI system*:
+**agent-family** is an open template framework for building a family-structured AI system.
 
-- A **Family Core** — your AI agent's identity, memory, and behavior, defined entirely in Markdown
-- **Plugins** — domain-specific child projects that extend the core (finance, messaging, etc.)
+The system has two layers:
 
-No code in the core. No database. Files are memory.
+- **Family Core** — the parent. Defines the agent's identity, memory, skills, and rules. Manages and propagates everything to children.
+- **Children** — independent child projects that connect to the parent. Each has its own purpose and backlog, but inherits skills and rules from the parent.
+
+No code in the parent. No database. Files are memory.
 
 ---
 
-## How it works
+## Parent–Child Structure
 
 ```
 {username}_family/
-├── {username}/                  # Family Core — this agent's "brain"
-│   ├── CLAUDE.md                # Governance constitution
-│   ├── data/persona/            # Who the user is, who the AI is
-│   └── .claude/skills/          # Reusable agent behaviors
+├── {username}/                    # Family Core (parent)
+│   ├── CLAUDE.md                  # Governance constitution
+│   ├── data/persona/              # Who the user is, who the AI is
+│   └── .claude/
+│       ├── skills/                # Skills managed here, propagated to children
+│       └── templates/             # Templates used to create child projects
 └── {username}_children/
-    ├── financial-planner/       # Core Plugin
-    └── telegram-bot/            # Connector Plugin
+    ├── financial-planner/         # Child project
+    └── telegram-bot/              # Child project
 ```
 
-The agent reads `CLAUDE.md` first, then persona files, then acts according to skills. No runtime required — just Claude Code (or Cursor).
+Family Core is the single source of truth for skills and rules.  
+Children start from the parent's template and stay in sync through propagation skills.
+
+---
+
+## Child vs Plugin
+
+A **child** is a personal project created from within Family Core using the `create-child` skill. Freely added and removed by the user.
+
+A **plugin** is a child that has been promoted for public distribution — managed and deployed through agent-family. Plugins can start as children and be promoted via the `promote-to-plugin` skill, or be built as plugins from the start.
+
+All plugins are children, but not all children are plugins.
+
+---
+
+## How Children Are Created
+
+Children are created directly from the parent using the `create-child` skill — no manual setup needed.
+
+The parent holds the templates used to scaffold each new child (under `.claude/templates/`).  
+Modifying these lets you customize the default structure of all future children.
+
+When creating a child, the agent asks whether you intend to distribute it publicly.  
+If yes, it scaffolds a plugin-ready structure from the start.
+
+```
+# In Family Core, just ask:
+Create a new child project.
+```
+
+---
+
+## Propagation
+
+Skills and rules flow between parent and children through two built-in skills.
+
+| Skill | Direction | When to use |
+|-------|-----------|-------------|
+| `create-child` | Parent → new child | Create a new child project |
+| `promote-to-plugin` | Child → agent-family | Promote a child to a distributable plugin |
+| `sync-to-children` | Parent → children | Push updated skills or rules to children |
+| `sync-to-core` | Child → Parent | Promote a child-level change back to the parent |
 
 ---
 
 ## Templates
 
-| Template | Description | Use for |
-|----------|-------------|---------|
-| [family-core](templates/family-core/) | Family Core template | Your AI agent's home base |
-| [family-plugin](templates/family-plugin/) | Plugin template | Each domain-specific extension |
+| Template | Description |
+|----------|-------------|
+| [family-core](templates/family-core/) | Family Core — the parent project |
+| [family-plugin](templates/family-plugin/) | Plugin — distributable child project |
 
 ---
 
@@ -45,34 +90,35 @@ The agent reads `CLAUDE.md` first, then persona files, then acts according to sk
 
 ### 1. Create the Family Core
 
-Use the [family-core](templates/family-core/) template to create your core repo.  
-Name it `{username}` (e.g. `alice`).
+Use the [family-core](templates/family-core/) template.  
+Name the repo `{username}` (e.g. `alice`).
 
 ### 2. Run the onboarding prompt
 
-Open the repo in Claude Code and paste:
+Open Claude Code in the repo and paste:
 
 ```
 Set up my agent-family-core.
 
-Replace the placeholders with the values below,
-then ask me questions to fill in the persona files.
+Ask me each of the following values one by one, then replace all placeholders and fill in the persona files interactively.
 
-- username: [your name]
-- AI name: [agent name]
-- Backlog prefix: [2–3 uppercase letters, e.g. MY]
-- Project purpose: [one-line description]
-- Language: [your preferred language, e.g. English / 한국어 / 日本語]
+Required:
+- username
+- AI name
+- Backlog prefix (2–3 uppercase letters, e.g. MY)
+- Project purpose (one-line description)
+- Language (default language for all responses and documents, e.g. English / 한국어 / 日本語)
 ```
 
 > **Language is required.** The agent uses this as its default language for all responses and documents.
 
-The agent will replace placeholders and fill in your persona files interactively.
+### 3. Create children from the parent
 
-### 3. Add plugins (optional)
+Once Family Core is set up, ask the agent to create child projects:
 
-Use the [family-plugin](templates/family-plugin/) template for each new domain.  
-Place it at `{username}_children/{plugin-name}/`.
+```
+Create a new child project.
+```
 
 ---
 
@@ -80,11 +126,49 @@ Place it at `{username}_children/{plugin-name}/`.
 
 | Principle | How |
 |-----------|-----|
-| Zero code in core | Core is `.md` only. Code lives in plugins. |
+| Zero code in parent | Family Core is `.md` only. Code lives in children. |
 | Files = memory | Markdown files are the agent's persistent state. No DB. |
 | Skills = behavior | One `SKILL.md` = one reusable workflow. |
-| Plug-and-play | Add or remove plugins without touching the core. |
+| Parent manages, children execute | Skills and rules flow down from parent to children. |
 | Single source of truth | `CLAUDE.md` is the only governance document. |
+
+---
+
+## Auto-deployment
+
+This repo uses GitHub Actions to automatically sync template folders to their respective GitHub Template repositories on every push to `main`.
+
+```
+push to agent-family (main)
+  ├── templates/family-core/**   →  agent-family-core repo
+  └── templates/family-plugin/** →  agent-family-plugin repo
+```
+
+### Setup
+
+**1. Create two GitHub repos** (empty, no README)
+- `agent-family-core`
+- `agent-family-plugin`
+
+Enable **Template repository** in each repo's Settings → General.
+
+**2. Generate a Fine-grained PAT**
+
+GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
+
+| Field | Value |
+|-------|-------|
+| Repository access | `agent-family-core`, `agent-family-plugin` |
+| Contents permission | Read and write |
+
+**3. Add secret to this repo**
+
+`agent-family` → Settings → Secrets and variables → Actions → New repository secret
+
+- Name: `DEPLOY_TOKEN`
+- Value: the PAT from step 2
+
+After this, any push that modifies `templates/` will automatically update the template repos.
 
 ---
 
@@ -92,9 +176,11 @@ Place it at `{username}_children/{plugin-name}/`.
 
 ```
 agent-family/
+├── .github/workflows/
+│   └── deploy-templates.yml     # Auto-deployment to template repos
 ├── templates/
-│   ├── family-core/             # Distributable Family Core template
-│   └── family-plugin/           # Distributable Plugin template
+│   ├── family-core/             # Source for agent-family-core repo
+│   └── family-plugin/           # Source for agent-family-plugin repo
 └── docs/
     ├── 10_planning/             # Onboarding prompt design
     └── 20_spec/                 # Architecture specs

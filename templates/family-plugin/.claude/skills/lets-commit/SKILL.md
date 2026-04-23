@@ -28,4 +28,4 @@ description: Applies reusable commit conventions. Use when preparing commits, gr
 - [ ] 커밋 범위가 단일 목적인가
 - [ ] 타입이 변경의 주요 이유와 일치하는가
 - [ ] 요약 줄이 변경 이유를 설명하는가
-- [ ] 관련 문서/테스트가 같이 업데이트됐는가
+- [ ] 관련 문서/CHANGELOG가 같이 업데이트됐는가
