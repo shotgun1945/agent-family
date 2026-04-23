@@ -26,20 +26,25 @@ README.md Option A에 게재되는 프롬프트.
 ```
 Set up my agent-family system.
 
-Do the following steps in order:
+Step 1: Ask me which language to use (e.g. English / 한국어 / 日本語). Use that language for all output from this point on.
 
-1. Ask me for my preferred language first (e.g. English / 한국어 / 日本語). Use that language for all questions and output from this point on.
-2. Ask me for a family name (this becomes the folder and repo name).
-3. Create the folder structure:
+Step 2: Once I answer, show me this form and wait for me to fill it in and send it back:
+
+---
+Family name (becomes the folder and repo name):
+AI name:
+Backlog prefix (2–3 uppercase letters, e.g. MY):
+---
+
+Step 3: After I submit the form, do the following:
+1. Create the folder structure:
    - {family-name}_family/
    - {family-name}_family/{family-name}/        ← Family Core lives here
    - {family-name}_family/{family-name}_children/
-4. Clone the Family Core template into {family-name}_family/{family-name}/:
-   git clone https://github.com/shotgun1945/agent-family-core.git {family-name}_family/{family-name}
-5. Ask me the following values one by one:
-   - AI name
-   - Backlog prefix (2–3 uppercase letters, e.g. MY)
-6. Replace all placeholders in the cloned files. Use today's date for {SETUP_DATE} (YYYY-MM-DD format).
+2. Download the Family Core template (no git history attached):
+   git clone --depth 1 https://github.com/shotgun1945/agent-family-core.git {family-name}_family/{family-name}
+   rm -rf {family-name}_family/{family-name}/.git
+3. Replace all placeholders in the cloned files. Use today's date for {SETUP_DATE} (YYYY-MM-DD).
    Files to update:
    - README.md → {family-name}
    - CLAUDE.md → {SETUP_DATE}, {username}, {LANGUAGE}, {AI_NAME}, {BACKLOG_PREFIX}
@@ -53,10 +58,10 @@ Do the following steps in order:
    - docs/README.md → {SETUP_DATE}
    - docs/00_backlog/backlog.md → {SETUP_DATE}, {BACKLOG_PREFIX}
    - docs/00_backlog/backlog_done.md → {SETUP_DATE}
-   Note: {username} and {family-name} = family name entered in step 2.
-7. Fetch the plugin registry and ask which plugins I want to install:
+   Note: {username} and {family-name} = family name from the form.
+4. Fetch the plugin registry and ask which plugins I want to install:
    https://raw.githubusercontent.com/shotgun1945/agent-family/main/plugins/registry.md
-8. When done, tell me to open {family-name}_family/{family-name}/ in my AI agent and start fresh from there.
+5. Tell me to open {family-name}_family/{family-name}/ in my AI agent and start fresh from there.
 ```
 
 ---
@@ -68,15 +73,18 @@ README.md Option B Step 4에 게재되는 프롬프트.
 ```
 Set up my Family Core.
 
-Ask me the following values one by one (starting with language), then replace all placeholders. Use today's date for {SETUP_DATE} (YYYY-MM-DD).
+Step 1: Ask me which language to use (e.g. English / 한국어 / 日本語). Use that language for all output from this point on.
 
-Required:
-- Language (e.g. English / 한국어 / 日本語) — ask this first, then use it for all output
-- Family name (this becomes {username} in all files)
-- AI name
-- Backlog prefix (2–3 uppercase letters, e.g. MY)
+Step 2: Once I answer, show me this form and wait for me to fill it in and send it back:
 
-Files to update after collecting values:
+---
+Family name (becomes {username} in all files):
+AI name:
+Backlog prefix (2–3 uppercase letters, e.g. MY):
+---
+
+Step 3: After I submit the form, replace all placeholders. Use today's date for {SETUP_DATE} (YYYY-MM-DD).
+Files to update:
 - README.md → {family-name}
 - CLAUDE.md → {SETUP_DATE}, {username}, {LANGUAGE}, {AI_NAME}, {BACKLOG_PREFIX}
 - data/persona/assistant_persona.md → {SETUP_DATE}, {AI_NAME}, {username}
@@ -89,7 +97,7 @@ Files to update after collecting values:
 - docs/README.md → {SETUP_DATE}
 - docs/00_backlog/backlog.md → {SETUP_DATE}, {BACKLOG_PREFIX}
 - docs/00_backlog/backlog_done.md → {SETUP_DATE}
-Note: {username} and {family-name} = family name entered above.
+Note: {username} and {family-name} = family name from the form.
 
 After setup, optionally ask if I want to set up my persona (profile, preferences, personality).
 ```
@@ -111,7 +119,8 @@ After setup, optionally ask if I want to set up my persona (profile, preferences
 ```bash
 mkdir -p {family-name}_family/{family-name}
 mkdir -p {family-name}_family/{family-name}_children
-git clone https://github.com/shotgun1945/agent-family-core.git {family-name}_family/{family-name}
+git clone --depth 1 https://github.com/shotgun1945/agent-family-core.git {family-name}_family/{family-name}
+rm -rf {family-name}_family/{family-name}/.git
 ```
 
 ### 3단계: 플레이스홀더 치환
