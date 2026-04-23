@@ -1,5 +1,6 @@
 ---
 updated: {SETUP_DATE}
+version: 1
 ---
 
 # {username}
