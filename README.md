@@ -21,10 +21,12 @@ The system has two layers:
 {family-name}_family/
 ├── {family-name}/                 # Family Core (parent)
 │   ├── CLAUDE.md                  # Governance constitution
-│   ├── data/persona/              # Who the user is, who the AI is
-│   └── .claude/
-│       ├── skills/                # Skills managed here, propagated to children
-│       └── templates/             # Templates used to create child projects
+│   ├── AGENTS.md                  # Agent compatibility entrypoint
+│   ├── data/
+│   │   ├── persona/               # Who the user is, who the AI is
+│   │   └── templates/             # Templates used to create child projects
+│   ├── .claude/skills/            # Skills managed here, propagated to children
+│   └── .agents/skills/            # Thin wrappers for broad agent compatibility
 └── {family-name}_children/
     ├── financial-planner/         # Child project (personal)
     └── telegram-bot/              # Plugin (installed from registry)
@@ -157,9 +159,7 @@ After setup, optionally ask if I want to set up my persona (profile, preferences
 
 | Skill | Direction | Purpose |
 |-------|-----------|---------|
-| `create-child` | Parent → new child | Scaffold a new personal child project |
-| `install-plugin` | Registry → children | Install an official plugin from the registry |
-| `promote-to-plugin` | Child → community | Promote a child to a distributable plugin |
+| `create-child` | Parent → new child | Scaffold a new child project |
 | `sync-to-children` | Parent → children | Push updated skills or rules to children |
 | `sync-to-core` | Child → Parent | Promote a child-level change back to the parent |
 
