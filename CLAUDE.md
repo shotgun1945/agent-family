@@ -88,6 +88,7 @@ super_luan에서 개인화된 내용을 제거하고, 누구나 자신만의 AI 
 - 저장 기준: `../../super_luan/data/persona/update_rules.md`
 - 조건에 맞는 정보는 `../../super_luan/data/persona/`에 직접 반영
 
+<!-- region: family-core -->
 ## 백로그
 - 활성 백로그: `docs/00_backlog/backlog.md` — **진행** / **대기** 섹션
 - 완료 아카이브: `docs/00_backlog/backlog_done.md`
@@ -103,6 +104,7 @@ super_luan에서 개인화된 내용을 제거하고, 누구나 자신만의 AI 
 - `설명` — 작업 내용 및 목적
 - `추가 문서` — 관련 문서 경로 (없으면 `-`)
 - `등록일` — YYYY-MM-DD
+<!-- /region: family-core -->
 
 ## Cursor Rules 참조
 
