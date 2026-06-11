@@ -1,5 +1,5 @@
 ---
-updated: 2026-04-16
+updated: 2026-06-11
 ---
 
 # agent-family
@@ -64,14 +64,11 @@ super_luan에서 개인화된 내용을 제거하고, 누구나 자신만의 AI 
 
 ## super_luan 연동
 - **전파 목록(매니페스트)** — 자식으로 복사하지 않음. 항상 super_luan만 참조: `../../super_luan/data/children_propagation_manifest.md`
-- 로컬 복사된 스킬(매니페스트 `자식 로컬 복사 매핑`):
+- 로컬 복사된 스킬(매니페스트 `자식 로컬 복사 매핑` — 자식 자기 자신에만 작용하는 범용 스킬만):
   - `lets-commit` → `.claude/skills/lets-commit/SKILL.md`
-  - `update-docs-from-conversation` → `.claude/skills/update-docs-from-conversation/SKILL.md`
-  - `sync-super-luan-distribution` → `.claude/skills/sync-super-luan-distribution/SKILL.md`
   - `complete-backlog-item` → `.claude/skills/complete-backlog-item/SKILL.md`
-  - `report-super-luan-distribution-change` → `.claude/skills/report-super-luan-distribution-change/SKILL.md`
-  - `wiki-query` → `.claude/skills/wiki-query/SKILL.md`
-  - `wiki-ingest` → `.claude/skills/wiki-ingest/SKILL.md`
+- 위키 읽기·쓰기는 super_luan에서만 한다 (이 레포는 공개 배포용이라 `super-luan-wiki`/`super-luan-persona` MCP를 등록하지 않음)
+- 공용(배포된) 파일을 이 레포에서 수정했다면, **super_luan에서 `pull-from-child`를 실행**해 부모로 승격한다 (자식에는 역방향 스킬을 두지 않음)
 - super_luan 참조 문서(상대 경로):
   - `../../super_luan/data/persona/`
   - `../../super_luan/data/persona/update_rules.md`
@@ -86,7 +83,9 @@ super_luan에서 개인화된 내용을 제거하고, 누구나 자신만의 AI 
 
 ## 페르소나 업데이트
 - 저장 기준: `../../super_luan/data/persona/update_rules.md`
-- 조건에 맞는 정보는 `../../super_luan/data/persona/`에 직접 반영
+- **쓰기는 반드시 ledger(signals)로 기록한다** — super_luan의 capture CLI 사용:
+  `python3 ../../super_luan/scripts/persona_memory.py --root ../../super_luan capture ...`
+- `profile.md`/`preferences.md`/`personality.md`는 generated summary다 — **직접 편집 금지** (다음 build에서 덮어쓰여짐)
 
 <!-- region: family-core -->
 ## 백로그
