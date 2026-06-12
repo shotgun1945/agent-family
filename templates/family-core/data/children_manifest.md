@@ -52,6 +52,18 @@ updated: {SETUP_DATE}
 
 ---
 
+## MCP 서버 등록 (`.mcp.json` 키 merge)
+
+자식에서 부모 위키를 **읽기 전용**으로 쓰려면, 자식 `.mcp.json`의 `mcpServers`에 아래 키를 **키별로 merge**한다. 파일 복사가 아니라 키 merge다 — 자식 고유 서버는 보존하고, 이미 있는 `family-wiki` 키는 덮어쓰지 않고 skip한다.
+
+| 키 | 종류 | 서버 위치 (부모 기준) |
+|----|------|----------------------|
+| `family-wiki` | read-only | `mcp_servers/wiki/` (등록 예시는 그 안 `README.md`) |
+
+> 등록 시 `--directory`에 부모(Family Core)의 **절대경로**가 들어간다 → 머신별 설정이다. 공유 Git에 절대경로를 커밋하지 말고, 머신마다 등록하거나 `.mcp.json`을 ignore한다.
+
+---
+
 ## 스킬 목록 (컨트롤)
 
 | 스킬 name | 경로 | 언제 쓰는지 |

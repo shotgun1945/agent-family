@@ -28,10 +28,11 @@ updated: {SETUP_DATE}
 
 ### 부모 Wiki 사용
 
-- 공통 지식 위키는 `../../{username}/data/wiki/`를 단일 원천으로 사용한다 (자식은 **읽기만** — ingest·lint 등 위키 쓰기는 부모에서만 한다).
-- 질문을 받으면 `../../{username}/data/wiki/index.md`를 먼저 읽고 관련 페이지를 따라간다.
-- 검색 보조는 부모 공용 스크립트를 호출한다:
-  `python3 ../../{username}/scripts/wiki.py search "<질문 키워드>" --root ../../{username} --limit 8`
+- 공통 지식 위키는 부모의 `data/wiki/`를 단일 원천으로 사용한다 (자식은 **읽기만** — ingest·lint 등 위키 쓰기는 부모에서만 한다).
+- **정식 경로 — `family-wiki` MCP** (등록돼 있으면 우선): `wiki_index()` → `wiki_search(query)` → `wiki_read(path)` 순으로 사용한다. 등록 방법: 부모 `mcp_servers/wiki/README.md`.
+- **fallback — 상대경로** (MCP 미등록 시):
+  - `../../{username}/data/wiki/index.md`를 먼저 읽고 관련 페이지를 따라간다
+  - 검색 보조: `python3 ../../{username}/scripts/wiki.py search "<질문 키워드>" --root ../../{username} --limit 8`
 - 자식에서 나온 재사용 가능한 분석은 부모 위키에 filed-back할 후보로 유저에게 제안한다 (반영은 부모에서).
 
 ## 유저 페르소나
